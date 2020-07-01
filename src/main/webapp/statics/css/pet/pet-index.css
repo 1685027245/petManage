@@ -1,0 +1,91 @@
+/* .chart-01{
+			width: 500px;
+			margin-left: 40px;
+			margin-right: 40px;
+			margin-bottom: 40px;
+		} */
+
+.top-title{
+	padding-top: 30px;
+}
+.top-title-common{
+	padding-right: 10px;
+	color: white;
+	font-size: 16px;
+}
+.top-title1{
+	background: #64b0f2;
+	height: 143px;
+	padding: 20px 30px;
+}
+.top-title2{
+	background: #f1b53d;
+	height: 143px;
+	padding: 20px 30px;
+}
+.top-title3{
+	background: #3db9dc;
+	height: 143px;
+	padding: 20px 30px;
+}
+.top-title4{
+	background: #ff5d48;
+	height: 143px;
+	padding: 20px 30px;
+}
+.total-num{
+	font-size: 46px;
+	padding-left: -5px;
+}
+.top-title i {
+    font-size: 80px;
+    margin-top: 20px;
+}
+.data-table{
+	margin-top: 25px;
+}
+.data-table1{
+	height: 465px;
+	border: 1px solid #DDDDDD;
+	padding: 10px 20px;
+	background: white;
+}
+.data-table2{
+	height: 455px;
+	border: 1px solid #DDDDDD;
+	padding: 10px 20px;
+	background: white;
+}
+.table-footer{
+	height: 50px;
+	background: rgba(0,0,0,.03);
+	margin: 0;
+	line-height: 50px;
+	padding-left: 15px;
+	border: 1px solid ;
+	border: 1px solid rgba(0,0,0,.125);
+	background: white;
+}
+.other-maps {
+	margin: 20px 0;
+    height: 55px;
+}
+.maps{
+	height: 55px;
+	line-height: 55px;
+	text-align: center;
+	background: #3db9dc;
+	color: white;
+	font-size: 16px;
+	padding-left: 10px;
+	cursor: pointer;
+}
+.maps:hover{
+	background: rgba(0,0,0,0.5) !important;
+}
+.maps-first{
+	padding-left: 0 !important;
+}
+.maps-last{
+	padding-right: 0 !important;
+}

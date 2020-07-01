@@ -1,0 +1,251 @@
+body,html{
+	height: 100%;
+	background: #efefef;
+}
+@media (min-width: 768px) {
+	.sidebar {
+		position: absolute;
+		width: 250px;
+		z-index: 2;
+		height: calc(100% - 50px);
+	}
+	.content-main{
+		height: calc(100% - 50px);
+		margin-left: 250px;
+		overflow: auto;
+	}
+}
+
+.sidebar .sidebar-search {
+	padding: 15px;
+}
+.sidebar ul li a.active {
+	background-color: #6194C1;
+	color: white;
+}
+#side-menu li>a{
+	padding-left: 30px;
+}
+.nav-tabs>li>a {
+	margin-right: 0px;
+}
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 15px 15px;
+	/*padding-left: 30px;*/
+	line-height: 20px;
+	color:#b5b5b5;
+}
+.nav>li>a:hover {
+    background: #414d58;
+	color: white;
+}
+.nav>li>a:active,.nav>li>a:focus {
+    background: #6194c1;
+	color: white;
+}
+
+.sidebar ul li {
+	/* background: #f8f8f8;
+	border-bottom: #e7e7e7 1px solid; */
+}
+
+.nav-second-level li {
+	border-bottom: 0 !important;
+}
+
+.nav-second-level li a {
+	padding-left: 50px !important;
+}
+
+.navbar {
+	margin-bottom: 0;
+}
+.footer{
+	height: 42px;
+	line-height: 42px;
+	/* background: #CCCCCC; */
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	width: calc(100% - 250px);
+	margin-left: 250px;
+	overflow: auto;
+	padding-left: 20px;
+	background: white;
+}
+.navbar-default {
+    background-color: #262D33;
+    /* border-color: #e7e7e7; */
+}
+.navbar-static-top {
+	background: #4980b5;
+	border: none;
+	height: 50px;
+}
+.navbar-collapse {
+    padding-right: 0;
+    padding-left: 0;
+    overflow-x: visible;
+    -webkit-overflow-scrolling: touch;
+    border-top: 1px solid transparent;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.1);
+}
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+	border: none;
+    /* border-color: #e7e7e7; */
+}
+.logo{
+	padding-left: 100px;
+}
+.logo img{
+	width: 105px;
+	height: 50px;
+	padding: 5px;
+}
+.logo span{
+	display: inline-block;
+	font-size: 18px;
+	color: white;
+	text-decoration: none;
+	margin-top: 13px;
+}
+.nav-right{
+	color: white;
+	margin-right: 50px;
+}
+.nav-right1{
+	margin-left: 30px;
+	position: relative;
+}
+.nav-right1 i{
+	font-size: 20px;
+    margin-top: 14px;
+}
+.nav-right1 img{
+	width: 40px;
+	height: 40px;
+	margin-top: 5px;
+	border-radius: 50%;
+}
+.top {
+	height: 50px;
+	line-height: 50px;
+	font-size: 16px;
+	padding-left: 32px;
+	background: white;
+}
+.top-position{
+	font-size: 14px;
+	padding-right: 30px;
+}
+.top-position-name{
+	color: #6c757d;
+}
+.container-fluid{
+	/*height: 915px;*/
+	height: calc(100% - 50px);
+}
+.fa-plus{
+	padding-right: 3px;
+}
+.personal-msg{
+	width: 170px;
+	background: white;
+	color: #212529;
+	position: absolute;
+	transform: translate3d(-109px, 50px, 0px);
+	top: 0px;
+	left: 0px;
+	will-change: transform;
+	display: none;
+}
+.person-name{
+	height: 44px;
+	line-height: 44px;
+	font-size: 18px;
+	background: #3492ea;
+	padding-left: 20px;
+	color: white;
+}
+.person{
+	padding-left: 20px;
+	height: 42px;
+	line-height: 42px;
+}
+.person:hover{
+	background: #F8F9FA;
+	cursor: pointer;
+}
+.person i{
+	font-size: 16px;
+	margin-top: 5px;
+	margin-right: 5px;
+}
+#my-img:hover{
+	cursor: pointer;
+}
+.personal-msg a{
+	text-decoration: none;
+}
+.modal-dialog {
+	text-align: left;
+}
+
+.infoMsg{
+	position: absolute;
+	top: -6px;
+	left: 17px;
+	font-size: 10px;
+	color: white;
+	/*display: inline-block;*/
+	background: red;
+	padding: 1px 3px 0px 2px;
+	display: none;
+}
+
+
+.news-all{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 50px;
+    overflow: hidden;
+}
+
+.news_li,.swap{
+	list-style: none;
+	color: white;
+	position: absolute;
+	top: 0;
+	left: 0;
+    width: 200px;
+    padding-left: 0;
+    padding-right: 0;
+}
+.swap{top:50px;}
+.news_li li,.swap li{
+	height: 50px;
+	padding-top: 15px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    padding-left: 10px;
+    padding-right: 20px;
+    text-align: right;
+    cursor: pointer;
+}
+.news_li li:hover,.swap li:hover{
+    color: red;
+}
+
+.footer{
+	border-top: 1px solid #eeeeee;
+	box-sizing: content-box;
+}
+.footer-content{
+	padding-left: 15px;
+}

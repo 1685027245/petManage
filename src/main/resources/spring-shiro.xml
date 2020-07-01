@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 配置 shirotest 的核心组件：securityManager -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <!-- 配置缓存 -->
+        <property name="cacheManager" ref="cacheManager"/>
+        <!-- 配置域realm，用户名，密码，角色都保存在域里：实现从数据库中获取用户信息，需要我们自己创建一个类（实现Realm接口） -->
+        <property name="realm" ref="shiroRealm"/>
+        <!-- 声明remember -->
+        <property name="rememberMeManager" ref="rememberMeManager"></property>
+    </bean>
+
+    <!--声明cookie-->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"></constructor-arg>
+        <property name="httpOnly" value="true"></property>
+        <!--七天-->
+        <property name="maxAge" value="604800"></property>
+    </bean>
+    <!--声明记住我管理对象-->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie" ref="rememberMeCookie"></property>
+    </bean>
+
+    <!-- 配置ehcache缓存bean，导入ehcache并新建配置文件 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"></property>
+    </bean>
+
+    <!-- 配置自己域realm实现  -->
+    <bean id="shiroRealm" class="com.zy.shiro.ShiroRealm">
+        <!--配置盐值加密-->
+        <property name="credentialsMatcher" ref="hashedCredentialsMatcher"/>
+    </bean>
+
+    <!--凭证匹配器 盐值加密-->
+    <bean id="hashedCredentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <property name="hashAlgorithmName" value="md5"/>
+        <property name="hashIterations" value="1024"/>
+    </bean>
+
+    <!-- 配置shiro的一些拦截规则，id必须和web.xml中的 shiro 拦截器名一致
+    org.apache.shiro.spring.web.ShiroFilterFactoryBean
+    -->
+    <bean id="shiroFilter" class="com.zy.shiro.ShiroPermissionFactory">
+        <!-- Shiro的核心安全接口,这个属性是必须的 -->
+        <property name="securityManager" ref="securityManager" />
+        <!-- 身份认证失败，则跳转到登录页面的配置 -->
+        <property name="loginUrl" value="/open/index.html" />
+        <!-- 登录成功后的页面 -->
+        <property name="successUrl" value="/index.html" />
+        <!-- 权限认证失败，则跳转到指定页面 -->
+        <property name="unauthorizedUrl"  value="/unauthorized" />  <!-- 登录后访问没有权限的页面后跳转的页面 -->
+        <!--自定义登出,也可以自定义其他的一些拦截器-->
+        <property name="filters">
+            <map>
+                <!--退出过滤器-->
+                <entry key="logout" value-ref="systemLogoutFilter" />
+                <entry key="authc" value-ref="shiroLoginFilter" />
+                <entry key="hasAnyRoles" value-ref="anyRolesAuthorizationFilter"/>
+            </map>
+        </property>
+        <!-- shiro连接约束配置,在这里使用自定义的动态获取资源类 -->
+        <!--<property name="filterChainDefinitionMap" ref="chainDefinitionSectionMetaSource" />-->
+        <!-- Shiro连接约束配置,即过滤链的定义 -->
+       <property name="filterChainDefinitions">
+            <value>
+                <!--注意：规则是有顺序的，从上到下，拦截范围必须是从小到大的
+                url = 拦截规则（anon为匿名，authc为要登录后，才能访问，logout登出过滤） -->
+                /statics/**= anon <!--静态资源不拦截-->
+                /login = anon
+                /loginCheck = anon
+                /registerUser.html = anon
+                /getRegisterMsg.html=anon
+                /findPwd.html=anon
+                /updateUserPwd.html=anon
+                /logout = logout
+            </value>
+        </property>
+    </bean>
+
+    <!--自定义登录-->
+    <bean id="shiroLoginFilter" class="com.zy.shiro.ShiroLoginFilter"></bean>
+
+    <!--使用自定义数据库加载配置-->
+    <!--<bean id="chainDefinitionSectionMetaSource" class="com.zy.shiro.ChainDefinitionSectionMetaSource">
+        <property name="filterChainDefinitions">
+            <value>
+                /statics/** = anon
+                /login = anon
+                /loginCheck = anon
+                /logout = logout
+                / = authc
+            </value>
+        </property>
+    </bean>-->
+
+    <!--自定义多角色过滤器-->
+    <bean id="anyRolesAuthorizationFilter" class="com.zy.shiro.AnyRolesAuthorizationFilter"/>
+
+    <!--自定义LogoutFilter,退出-->
+    <bean id="systemLogoutFilter" class="com.zy.shiro.SystemLogoutFilter">
+        <property name="redirectUrl" value="/open/index.html"/>
+    </bean>
+
+    <!-- 开启shiro注解支持 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+        <!-- 强制使用cglib代理 -->
+        <property name="proxyTargetClass" value="true"></property>
+    </bean>
+    <!-- 配置切面  目的验权，判断当前用户是否有权限调用service层方法 -->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor"></bean>
+
+    <!--注解配置没有权限页面-->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.apache.shiro.authz.UnauthorizedException">
+                    <!-- 没有权限时跳转的页面 -->
+                    /unauthorized
+                </prop>
+                <prop key="org.apache.shiro.authz.UnauthenticatedException">
+                    <!-- 认证错误时跳转的页面 -->
+                    /unauthorized
+                </prop>
+            </props>
+        </property>
+    </bean>
+</beans>

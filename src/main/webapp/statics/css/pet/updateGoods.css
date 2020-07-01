@@ -1,0 +1,55 @@
+.add-pet{
+	/*min-height: 825px;*/
+	background: white;
+	margin: 20px auto 70px;
+	margin-left: 15px !important;
+	margin-right: 15px !important;
+}
+.pet-value-name{
+	text-align: right;
+	line-height: 35px;
+}
+.tab-pane .row{
+	margin-top: 20px;
+}
+.pet-origin p{
+	margin-top: 6px;
+}
+.save-pets{
+	text-align: right;
+	padding-right: 15px;
+}
+
+.top-button{
+	height: 50px;
+	border-left: 5px solid #2277ee;
+	border-bottom: 1px solid #2277ee;
+	line-height: 50px;
+}
+.pet-value-img img{
+	width: 100%;
+	height: 250px;
+	border: 1px solid #2277ee;
+}
+.img-one{
+	position: relative;
+	display: inline-block;
+	margin-top: 10px;
+}
+.delImg{
+	display: block;
+	position: absolute;
+	top: 5px;
+	right: 13px;
+	width: 20px;
+	height: 20px;
+	color: red;
+	cursor: pointer;
+}
+.delImg:hover{
+	color: orange;
+}
+.tab-pane{
+	margin-right: 20px;
+	margin-bottom:20px
+}

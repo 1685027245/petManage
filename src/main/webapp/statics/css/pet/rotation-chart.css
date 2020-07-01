@@ -1,0 +1,14 @@
+/* 轮播图 */
+.carousel-inner .item img {
+	height: 400px; 
+	width: 100%;
+}
+
+.carousel-inner .carousel-control span{
+	width: 100px;
+	height: 100px;
+	margin-top: 50px; 
+}
+.carousel-control{
+	width: 0;
+}

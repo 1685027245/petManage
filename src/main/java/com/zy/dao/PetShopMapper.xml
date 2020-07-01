@@ -1,0 +1,1123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace的值就是dao接口的完整路径，就这个demo而言namespace 就是userDao.java的完整路径-->
+<mapper namespace="com.zy.dao.PetShopMapper">
+
+    <select id="queryAllPet" resultMap="petMap">
+        SELECT p1.*,p2.* FROM pet p1,pet_encyclopedias p2 WHERE p1.pet_encyclopedias_id = p2.id
+        <if test="shopId!=null and shopId!=''">
+            AND p1.shop_id = #{shopId}
+        </if>
+        <if test="keyword!=null and keyword!=''">
+            AND (p2.alias like CONCAT('%',#{keyword},'%') OR p1.number like CONCAT('%',#{keyword},'%') OR p2.name like CONCAT('%',#{keyword},'%') OR p2.country_of_origin like CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="category!=null and category!=''">
+            AND p2.category=#{category}
+        </if>
+        <if test="price!=null and price!=''">
+            <if test="price=='小于1000'">
+                AND p1.price BETWEEN 0 AND 1000
+            </if>
+            <if test="price=='1000-3000'">
+                AND p1.price BETWEEN 1000 AND 3000
+            </if>
+            <if test="price=='3000-5000'">
+                AND p1.price BETWEEN 3000 AND 5000
+            </if>
+            <if test="price=='5000-8000'">
+                AND p1.price BETWEEN 5000 AND 8000
+            </if>
+            <if test="price=='8000-10000'">
+                AND p1.price BETWEEN 8000 AND 10000
+            </if>
+            <if test="price=='大于10000'">
+                AND p1.price >10000
+            </if>
+        </if>
+        <if test="shape!=null and shape!=''">
+            AND p1.shape=#{shape}
+        </if>
+        <if test="hairLength!=null and hairLength!=''">
+            AND p1.hair_length=#{hairLength}
+        </if>
+        AND (p1.sales_status = "待售" OR p1.sales_status = "当前订单")
+        ORDER BY p1.create_time DESC
+        LIMIT #{startRow},#{pageSize}
+    </select>
+
+    <select id="getPetCount" resultType="int">
+        SELECT COUNT(*) FROM pet p1,pet_encyclopedias p2 WHERE p1.pet_encyclopedias_id = p2.id
+        <if test="shopId!=null and shopId!=''">
+            AND p1.shop_id = #{shopId}
+        </if>
+        <if test="keyword!=null and keyword!=''">
+            AND (p2.alias like CONCAT('%',#{keyword},'%') OR p1.number like CONCAT('%',#{keyword},'%') OR p2.name like CONCAT('%',#{keyword},'%') OR p2.country_of_origin like CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="category!=null and category!=''">
+            AND p2.category=#{category}
+        </if>
+        <if test="price!=null and price!=''">
+            <if test="price=='小于1000'">
+                AND p1.price BETWEEN 0 AND 1000
+            </if>
+            <if test="price=='1000-3000'">
+                AND p1.price BETWEEN 1000 AND 3000
+            </if>
+            <if test="price=='3000-5000'">
+                AND p1.price BETWEEN 3000 AND 5000
+            </if>
+            <if test="price=='5000-8000'">
+                AND p1.price BETWEEN 5000 AND 8000
+            </if>
+            <if test="price=='8000-10000'">
+                AND p1.price BETWEEN 8000 AND 10000
+            </if>
+            <if test="price=='大于10000'">
+                AND p1.price >10000
+            </if>
+        </if>
+        <if test="shape!=null and shape!=''">
+            AND p1.shape=#{shape}
+        </if>
+        <if test="hairLength!=null and hairLength!=''">
+            AND p1.hair_length=#{hairLength}
+        </if>
+        AND (p1.sales_status = "待售" OR p1.sales_status = "当前订单")
+    </select>
+
+    <insert id="savePets" parameterType="pet">
+		INSERT INTO pet(id,nick_name,shape,hair_length,weight,price,img_path,number,remarks,coat_color,pet_encyclopedias_id,sales_status,shop_id,create_time)
+		values (#{id},#{nickName},#{shape},#{hairLength},#{weight},#{price},#{imgPath},#{number},#{remarks},#{coatColor},#{petEncyclopediasId},#{salesStatus},#{shopId},#{createTime})
+	</insert>
+
+    <select id="getPetEncyclopedias" resultMap="petEncyclopediasMap">
+        select  * from pet_encyclopedias WHERE 1=1
+        <if test="category!=null and category!=''">
+          and category = #{category}
+        </if>
+        <if test="name!=null and name!=''">
+          and name = #{name}
+        </if>
+    </select>
+
+    <select id="getEncyclopedias" resultMap="petEncyclopediasMap">
+        select  * from pet_encyclopedias WHERE 1=1
+        <if test="category!=null and category!=''">
+            and category = #{category}
+        </if>
+        <if test="shape!=null and shape!=''">
+            and shape = #{shape}
+        </if>
+        <if test="hairLength!=null and hairLength!=''">
+            and hair_length = #{hairLength}
+        </if>
+        <if test="coatColor!=null and coatColor!=''">
+            and coat_color like"%"#{coatColor}"%"
+        </if>
+        <if test="function!=null and function!=''">
+            and function like"%"#{function}"%"
+        </if>
+        <if test="environment!=null and environment!=''">
+            and environment = #{environment}
+        </if>
+        <if test="varieties!=null and varieties!=''">
+            and varieties = #{varieties}
+        </if>
+
+        <if test="keyword!=null and keyword!=''">
+            and ( name like "%"#{keyword}"%"
+            OR  alias like "%"#{keyword}"%"
+            OR  shape like "%"#{keyword}"%"
+            OR  hair_length like "%"#{keyword}"%"
+            OR  english_name like "%"#{keyword}"%"
+            OR  intelligence_quotient like "%"#{keyword}"%"
+            OR  country_of_origin like "%"#{keyword}"%"
+            OR  weight like "%"#{keyword}"%"
+            OR  life like "%"#{keyword}"%"
+            OR  price like "%"#{keyword}"%"
+            OR  coat_color like"%"#{keyword}"%"
+            OR  FUNCTION like "%"#{keyword}"%"
+            OR  detail_characterities like "%"#{keyword}"%"
+            OR  origin like "%"#{keyword}"%"
+            OR  environment like "%"#{keyword}"%"
+            OR  varieties like "%"#{keyword}"%"
+            OR  category like "%"#{keyword}"%")
+        </if>
+        LIMIT #{startRow},#{pageSize}
+    </select>
+
+    <select id="getEncyclopediasCount" resultType="int">
+        select  count(*) from pet_encyclopedias WHERE 1=1
+        <if test="category!=null and category!=''">
+            and category = #{category}
+        </if>
+        <if test="shape!=null and shape!=''">
+            and shape = #{shape}
+        </if>
+        <if test="hairLength!=null and hairLength!=''">
+            and hair_length = #{hairLength}
+        </if>
+        <if test="coatColor!=null and coatColor!=''">
+            and coat_color like"%"#{coatColor}"%"
+        </if>
+        <if test="function!=null and function!=''">
+            and function like"%"#{function}"%"
+        </if>
+        <if test="environment!=null and environment!=''">
+            and environment = #{environment}
+        </if>
+        <if test="varieties!=null and varieties!=''">
+            and varieties = #{varieties}
+        </if>
+        <if test="keyword!=null and keyword!=''">
+            and ( name like "%"#{keyword}"%"
+            OR  alias like "%"#{keyword}"%"
+            OR  shape like "%"#{keyword}"%"
+            OR  hair_length like "%"#{keyword}"%"
+            OR  english_name like "%"#{keyword}"%"
+            OR  intelligence_quotient like "%"#{keyword}"%"
+            OR  country_of_origin like "%"#{keyword}"%"
+            OR  weight like "%"#{keyword}"%"
+            OR  life like "%"#{keyword}"%"
+            OR  price like "%"#{keyword}"%"
+            OR  coat_color like"%"#{keyword}"%"
+            OR  FUNCTION like "%"#{keyword}"%"
+            OR  detail_characterities like "%"#{keyword}"%"
+            OR  origin like "%"#{keyword}"%"
+            OR  environment like "%"#{keyword}"%"
+            OR  varieties like "%"#{keyword}"%"
+            OR  category like "%"#{keyword}"%")
+        </if>
+    </select>
+
+    <select id="getEncyclopediasById" resultMap="petEncyclopediasMap">
+        SELECT * FROM pet_encyclopedias WHERE id=#{id}
+    </select>
+    <!--查询最畅销宠物够
+       SELECT * FROM pet_encyclopedias WHERE id IN (SELECT petEncyclopediasId FROM pet
+       WHERE salesStatus='已售' GROUP BY petEncyclopediasId ORDER BY  COUNT(petEncyclopediasId) DESC)
+        AND category='狗狗'
+    -->
+
+    <select id="queryPetByCondition" resultMap="petMap">
+        SELECT p1.*,p2.* FROM pet p1,pet_encyclopedias p2 WHERE p1.pet_encyclopedias_id = p2.id
+        <if test="id!=null and id!=''">
+            AND p1.id=#{id}
+        </if>
+    </select>
+
+    <update id="updatePet">
+      UPDATE pet
+      <set>
+          nick_name=#{nickName},
+          shape=#{shape},
+          hair_length=#{hairLength},
+          weight=#{weight},
+          price=#{price},
+          img_path=#{imgPath},
+          number=#{number},
+          remarks=#{remarks},
+          coat_color=#{coatColor},
+          pet_encyclopedias_id=#{petEncyclopediasId},
+      </set>
+        WHERE id=#{id}
+    </update>
+
+    <select id="getPetShopByUserId" resultMap="petShopMap">
+        SELECT * FROM pet_shop WHERE user_id = #{userId}
+    </select>
+
+    <select id="getPetShopByShopId" resultMap="petShopMap">
+        SELECT * FROM pet_shop WHERE id = #{petShopId}
+    </select>
+
+
+    <select id="getPetSalesRecordsByShopId" resultMap="petSalesRecordsMap">
+        SELECT * FROM pet_sales_records WHERE shop_id = #{shopId} AND is_complete = #{isComplete}
+    </select>
+
+    <insert id="addGoodsToSalesRecords" parameterType="petSalesRecords">
+		INSERT INTO pet_sales_records(id,product_id,category,price,number,sales_time,user_id,salesman_id,folding_rate,remarks,shop_id,is_complete,total,product_name,product_number)
+		values (#{id},#{productId},#{category},#{price},#{number},#{salesTime},#{userId},#{salesmanId},#{foldingRate},#{remarks},#{shopId},#{isComplete},#{total},#{productName},#{productNumber})
+	</insert>
+
+    <delete id="delPetById">
+        DELETE FROM pet WHERE id=#{id}
+    </delete>
+
+    <delete id="delSalesRecordsById">
+        DELETE FROM pet_sales_records WHERE id=#{id}
+    </delete>
+
+    <update id="updatePetSalesStatus" parameterType="pet">
+        UPDATE pet SET sales_status=#{status} WHERE id = #{id}
+    </update>
+
+    <update id="updateFood" parameterType="petFood">
+        UPDATE pet_food SET status = #{status},stock = stock-#{stock},sold = sold+#{stock} WHERE id = #{id}
+    </update>
+
+    <update id="updatePeripherySales" >
+        UPDATE pet_periphery SET STATUS=#{status},stock=stock-#{stock},sold=sold+#{stock} WHERE id=#{id}
+    </update>
+
+    <delete id="delGoodsFromSalesRecordsByProductId">
+        DELETE FROM pet_sales_records WHERE product_id = #{productId}
+    </delete>
+
+    <select id="getSalesRecordsById" resultMap="petSalesRecordsMap">
+        SELECT * FROM pet_sales_records WHERE id = #{id}
+    </select>
+
+    <update id="updateSalesRecordsById" parameterType="petSalesRecords">
+        UPDATE pet_sales_records
+        <set>
+            <if test="number!=null and number!=''">
+                number = #{number},
+            </if>
+            <if test="foldingRate!=null and foldingRate!=''">
+                folding_rate = #{foldingRate},
+            </if>
+            <if test="total!=null and total!=''">
+                total = #{total},
+            </if>
+            <if test="salesTime!=null">
+                sales_time = #{salesTime},
+            </if>
+            <if test="isComplete!=null and isComplete!=''">
+                is_complete = #{isComplete}
+            </if>
+        </set>
+            WHERE id=#{id}
+    </update>
+
+    <select id="getPetShopMemberInfo" resultMap="petShopMemberMap">
+        SELECT * FROM pet_shop_member  WHERE 1=1
+        <if test="shopId!=null and shopId!=''">
+            AND shop_id=#{shopId}
+        </if>
+        <if test="userId!=null and userId!=''">
+            AND user_id=#{userId}
+        </if>
+        <if test="id!=null and id!=''">
+            AND id=#{id}
+        </if>
+        <if test="memberNumber!=null and memberNumber!=''">
+            AND member_number = #{memberNumber}
+        </if>
+    </select>
+
+    <select id="getPetShopMemberById" resultMap="petShopMemberMap">
+        SELECT * FROM pet_shop_member  WHERE 1=1
+        <if test="id!=null and id!=''">
+            AND id=#{id}
+        </if>
+    </select>
+
+    <insert id="addShopMemberUser" parameterType="petShopMember">
+		INSERT INTO pet_shop_member (id,user_id,level,score,shop_id,processing_time,balance,total,member_number)
+		VALUES (#{id},#{userId},#{level},#{score},#{shopId},#{processingTime},#{balance},#{total},#{memberNumber})
+	</insert>
+
+    <update id="updatePetShopMember" parameterType="petShopMember">
+       UPDATE pet_shop_member
+        <set>
+           <if test="userId!=null and userId!=''">
+                  user_id = #{userId},
+           </if>
+            <if test="balance!=null and balance!=''">
+                  balance = balance+#{balance},
+                  total = total+#{balance},
+            </if>
+            <if test="level!=null and level!=''">
+                level = #{level},
+            </if>
+            <if test="score!=null and score!=''">
+                score = score+#{score}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updatePetShopMemberBalance" parameterType="petShopMember">
+        UPDATE pet_shop_member
+        <set>
+            <if test="balance!=null and balance!=''">
+                balance = balance-#{balance},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addPetShopMemberRecord" parameterType="petShopMemberRecord">
+		INSERT INTO pet_shop_member_record(id,user_id,time,amount,personnel_id,card_number,shop_id)
+		VALUES (#{id},#{userId},#{time},#{amount},#{personnelId},#{cardNumber},#{shopId})
+	</insert>
+
+    <select id="getPetShopMemberRecord" resultMap="petShopMemberRecordMap">
+       SELECT * FROM pet_shop_member_record WHERE 1=1
+       <if test="shopId!=null and shopId!=''">
+          and  shop_id = #{shopId}
+       </if>
+    </select>
+
+    <select id="getFoodInformation" resultMap="petFoodMap">
+        SELECT * FROM pet_food WHERE 1=1
+        <if test="shopId!=null and shopId!=''">
+            AND shop_id = #{shopId}
+        </if>
+        <if test="keyword!=null and keyword!=''">
+            AND (name like CONCAT('%',#{keyword},'%') OR food_serial_number like CONCAT('%',#{keyword},'%') OR brand like CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="category!=null and category!=''">
+            AND category = #{category}
+        </if>
+        <if test="price!=null and price!=''">
+            <if test="price=='小于50'">
+                AND price BETWEEN 0 AND 50
+            </if>
+            <if test="price=='50-100'">
+                AND price BETWEEN 50 AND 100
+            </if>
+            <if test="price=='100-300'">
+                AND price BETWEEN 100 AND 300
+            </if>
+            <if test="price=='300-500'">
+                AND price BETWEEN 300 AND 500
+            </if>
+            <if test="price=='500-1000'">
+                AND price BETWEEN 500 AND 1000
+            </if>
+            <if test="price=='大于1000'">
+                AND price > 1000
+            </if>
+        </if>
+        <if test="flavor!=null and flavor!=''">
+            AND flavor = #{flavor}
+        </if>
+            ORDER BY create_time DESC
+        LIMIT #{startRow},#{pageSize}
+    </select>
+
+    <select id="getFoodCount" resultType="int">
+        SELECT COUNT(*) FROM pet_food WHERE shop_id =#{shopId}
+        <if test="keyword!=null and keyword!=''">
+            AND (name like CONCAT('%',#{keyword},'%') OR food_serial_number like CONCAT('%',#{keyword},'%') OR brand like CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="category!=null and category!=''">
+            AND category = #{category}
+        </if>
+        <if test="price!=null and price!=''">
+            <if test="price=='小于50'">
+                AND price BETWEEN 0 AND 50
+            </if>
+            <if test="price=='50-100'">
+                AND price BETWEEN 50 AND 100
+            </if>
+            <if test="price=='100-300'">
+                AND price BETWEEN 100 AND 300
+            </if>
+            <if test="price=='300-500'">
+                AND price BETWEEN 300 AND 500
+            </if>
+            <if test="price=='500-1000'">
+                AND price BETWEEN 500 AND 1000
+            </if>
+            <if test="price=='大于1000'">
+                AND price > 1000
+            </if>
+        </if>
+        <if test="flavor!=null and flavor!=''">
+            AND flavor = #{flavor}
+        </if>
+            and stock > 0
+    </select>
+
+    <select id="getFoodInformationById" resultMap="petFoodMap">
+        SELECT * FROM pet_food WHERE 1=1
+        <if test="id!=null and id!=''">
+            and id = #{id}
+        </if>
+    </select>
+
+    <insert id="addPetFood" parameterType="petFood">
+		INSERT INTO pet_food(id,name,category,brand,flavor,specification,shelf_life,place_of_origin,storage_mode,img_path,price,instructions,food_serial_number,date_of_manufacture,address_of_manufacturer,name_of_manufacturer,remarks,stock,shop_id,status,sold,create_time)
+		VALUES (#{id},#{name},#{category},#{brand},#{flavor},#{specification},#{shelfLife},#{placeOfOrigin},#{storageMode},#{imgPath},#{price},#{instructions},#{foodSerialNumber},#{dateOfManufacture},#{addressOfManufacturer},#{nameOfManufacturer},#{remarks},#{stock},#{shopId},#{status},#{sold},#{createTime})
+	</insert>
+
+    <delete id="delFoodById">
+        DELETE FROM pet_food WHERE id=#{id}
+    </delete>
+
+    <update id="updateAllFood">
+        UPDATE pet_food
+        <set>
+            name=#{name},
+            category=#{category},
+            brand=#{brand},
+            flavor=#{flavor},
+            specification=#{specification},
+            shelf_life=#{shelfLife},
+            place_of_origin=#{placeOfOrigin},
+            storage_mode=#{storageMode},
+            img_path=#{imgPath},
+            price=#{price},
+            instructions=#{instructions},
+            food_serial_number=#{foodSerialNumber},
+            date_of_manufacture=#{dateOfManufacture},
+            address_of_manufacturer=#{addressOfManufacturer},
+            name_of_manufacturer=#{nameOfManufacturer},
+            remarks=#{remarks},
+            stock=#{stock}
+        </set>
+         WHERE id=#{id}
+    </update>
+
+    <update id="updateFoodSalesStatus" >
+        UPDATE pet_food
+        <set>
+            <if test="status!=null and status!=''">
+                status = #{status}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <delete id="delAllCurrentOrder">
+        DELETE FROM pet_sales_records WHERE shop_id = #{shopId} AND  is_complete = FALSE
+    </delete>
+
+    <update id="updateAllPetStatusToBefore" >
+       UPDATE pet SET sales_status = '待售' WHERE shop_id = #{shopId} AND sales_status = '当前订单'
+    </update>
+
+    <update id="updateAllFoodStatusToBefore" >
+       UPDATE pet_food SET status = '待售' WHERE shop_id = #{shopId} AND status = '当前订单'
+    </update>
+
+    <update id="updateAllPeripheryStatusToBefiore" >
+       UPDATE pet_periphery SET status = '待售' WHERE shop_id = #{shopId} AND status = '当前订单'
+    </update>
+
+    <update id="updateAllServiceStatusToBefiore" >
+       UPDATE pet_shop_service SET status = '待售' WHERE shop_id = #{shopId} AND status = '当前订单'
+    </update>
+
+    <!--统计宠物店各宠物的数量及其宠物百科
+        SELECT COUNT(p1.petEncyclopediasId),p2.* FROM pet p1,pet_encyclopedias p2 WHERE p1.petEncyclopediasId = p2.id AND p1.shopId=1 AND (p1.salesStatus='待售' OR p1.salesStatus = '当前订单') GROUP BY p1.petEncyclopediasId;
+    -->
+    <select id="getPetStockByPetShopId" resultMap="petEncyclopediasMap" parameterType="String">
+        SELECT COUNT(p1.pet_encyclopedias_id) count,p2.*
+        FROM pet p1,pet_encyclopedias p2
+        WHERE p1.pet_encyclopedias_id = p2.id
+        AND p1.shop_id=#{shopId}
+        AND (p1.sales_status='待售' OR p1.sales_status = '当前订单')
+        GROUP BY p1.pet_encyclopedias_id;
+    </select>
+
+
+
+    <select id="getPetShopMemberDiscount" resultMap="petShopMemberDiscountMap">
+        SELECT * FROM pet_shop_member_discount WHERE 1=1
+        <if test="shopId!=null and shopId!=''">
+            and shop_id = #{shopId}
+        </if>
+    </select>
+
+    <update id="updateShopMemberName" parameterType="petShopMemberDiscount">
+      UPDATE pet_shop_member_discount
+      <set>
+          <if test="upperLimitOne!=null and upperLimitOne!=''">
+              upper_limit_one=#{upperLimitOne},
+          </if>
+          <if test="upperLimitTwo!=null and upperLimitTwo!=''">
+              upper_limit_two=#{upperLimitTwo},
+          </if>
+          <if test="upperLimitThree!=null and upperLimitThree!=''">
+              upper_limit_three=#{upperLimitThree},
+          </if>
+          <if test="upperLimitFour!=null and upperLimitFour!=''">
+              upper_limit_four=#{upperLimitFour},
+          </if>
+          <if test="nameOne!=null and nameOne!=''">
+              name_one=#{nameOne},
+          </if>
+          <if test="nameTwo!=null and nameTwo!=''">
+              name_two=#{nameTwo},
+          </if>
+          <if test="nameThree!=null and nameThree!=''">
+              name_three=#{nameThree},
+          </if>
+          <if test="nameFour!=null and nameFour!=''">
+              name_four=#{nameFour},
+          </if>
+          <if test="discountOne!=null and discountOne!=''">
+              discount_one=#{discountOne},
+          </if>
+          <if test="discountTwo!=null and discountTwo!=''">
+              discount_two=#{discountTwo},
+          </if>
+          <if test="discountThree!=null and discountThree!=''">
+              discount_three=#{discountThree},
+          </if>
+          <if test="discountFour!=null and discountFour!=''">
+              discount_four=#{discountFour},
+          </if>
+          <if test="integralSum!=null and integralSum!=''">
+              integral_sum=#{integralSum}
+          </if>
+      </set>
+          WHERE shop_id = #{shopId}
+    </update>
+
+    <select id="getPetShopMemberOpinion" resultMap="petShopMemberOpinionMap">
+        SELECT * FROM pet_shop_member_opinion WHERE 1=1
+        <if test="shopId!=null and shopId!=''">
+            AND shop_id = #{shopId}
+        </if>
+        <if test="replyStatus!=null and replyStatus!=''">
+            AND reply_status = #{replyStatus}
+        </if>
+        <if test="userId!=null and userId!=''">
+            AND user_id = #{userId}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <update id="updatePetShopMemberOpinion" >
+       UPDATE pet_shop_member_opinion
+       <set>
+           <if test="replyContent!=null and replyContent!=''">
+                reply_content = #{replyContent},
+           </if>
+           <if test="replyTime!=null">
+                reply_time=#{replyTime},
+           </if>
+           <if test="replyStatus!=null and replyStatus!=''">
+               reply_status=#{replyStatus}
+           </if>
+       </set>
+           WHERE id = #{id}
+    </update>
+
+    <delete id="delPetShopMemberOpinion">
+        DELETE FROM pet_shop_member_opinion WHERE id=#{id}
+    </delete>
+
+    <!--更新预约信息-->
+    <update id="updatePetShopOrder">
+        UPDATE pet_shop_user_order
+        <set>
+            <if test="result!=null and result!=''">
+                result=#{result},
+            </if>
+            <if test="replyStatus!=null and replyStatus!=''">
+                reply_status=#{replyStatus},
+            </if>
+            <if test="replyContent!=null and replyContent!=''">
+                reply_content=#{replyContent},
+            </if>
+            <if test="replyTime!=null">
+                reply_time=#{replyTime},
+            </if>
+            <if test="category!=null and category!=''">
+                category=#{category},
+            </if>
+            <if test="timeExplain!=null and timeExplain!=''">
+                time_explain=#{timeExplain},
+            </if>
+            <if test="remarks!=null and remarks!=''">
+                remarks=#{remarks},
+            </if>
+        </set>
+            WHERE id=#{id}
+    </update>
+
+
+    <!--宠物按月销售情况
+    SELECT SUM(total),DATE_FORMAT(salesTime,'%Y-%m') salesTime FROM pet_sales_records WHERE category='pet' AND shopId=1 AND isComplete=1 AND salesTime BETWEEN '2020-01-01' AND '2020-06-01' GROUP BY DATE_FORMAT(salesTime, '%Y-%m')
+    -->
+    <select id="getPetSalesAnalysisByMonths" resultType="java.util.HashMap">
+      SELECT SUM(${selectName}) AS total,DATE_FORMAT(sales_time,#{selectType}) AS dataName FROM pet_sales_records
+       WHERE category=#{category}
+       <if test="shopId!=null and shopId!=''">
+           AND shop_id=#{shopId}
+       </if>
+       AND is_complete=1
+       AND sales_time BETWEEN #{startTime} AND #{endTime}
+       GROUP BY DATE_FORMAT(sales_time,#{selectType})
+    </select>
+
+    <!--统计宠物销售分类占比-->
+    <select id="getPetSalesAnalysisByEncyclopedias" resultType="java.util.HashMap">
+      SELECT COUNT(${selectCountName}) as total,${selectName} as dataName FROM pet p1,pet_encyclopedias p2
+      WHERE p1.pet_encyclopedias_id = p2.id
+        <if test="shopId!=null and shopId!=''">
+            AND p1.shop_id=#{shopId}
+        </if>
+      AND p1.sales_status=#{salesStatus}
+      GROUP BY ${groupName}
+      ORDER BY total DESC
+      <if test="pageSize!=-1">
+          LIMIT #{pageSize}
+      </if>
+    </select>
+
+    <!--统计食品销售分类占比-->
+    <select id="getFoodSalesAnalysisByCategory" resultType="java.util.HashMap">
+      SELECT SUM(${selectName}) AS total,category AS dataName FROM pet_food
+        <if test="shopId!=null and shopId!=''">
+            WHERE shop_id=#{shopId}
+        </if>
+      GROUP BY category
+      ORDER BY total DESC
+      <if test="pageSize!=-1">
+          LIMIT #{pageSize}
+      </if>
+    </select>
+
+    <!--最畅销食品-->
+    <select id="getFoodSalesAnalysisHighes" resultType="java.util.HashMap">
+      SELECT sold AS total,NAME AS dataName FROM pet_food
+        <if test="shopId!=null and shopId!=''">
+            WHERE shop_id=#{shopId}
+        </if>
+      ORDER BY total DESC LIMIT #{pageSize}
+    </select>
+
+    <!--统计用户浏览量-->
+    <select id="getPetShopBrowseByShopId" resultType="java.util.HashMap">
+      SELECT COUNT(*) AS total,DATE_FORMAT(create_time,#{selectType}) AS dataName FROM pet_shop_browse_record
+       WHERE shop_id=#{shopId}
+        AND create_time BETWEEN #{startTime} AND #{endTime}
+       GROUP BY DATE_FORMAT(create_time,#{selectType})
+    </select>
+
+    <!--宠物店今日访问量-->
+    <select id="getPetShopBrowseByDay" resultType="java.util.HashMap">
+        SELECT COUNT(*) AS total FROM pet_shop_browse_record WHERE create_time BETWEEN  DATE_FORMAT(NOW(),'%Y-%m-%d') AND DATE_ADD(DATE_FORMAT(NOW(),'%Y-%m-%d'),INTERVAL 1 DAY)
+        AND  shop_id=#{shopId} GROUP BY user_id
+    </select>
+
+    <!--获取符合条件的宠物店-->
+    <select id="getAllPetShop" resultMap="petShopMap">
+        SELECT * FROM pet_shop p WHERE 1=1
+        <if test="isForbidden!=null and isForbidden!=''">
+            AND  p.is_forbidden = #{isForbidden}
+        </if>
+    </select>
+
+    <update id="updatePetShop" parameterType="petShop">
+        UPDATE pet_shop
+        <set>
+            <if test="isForbidden!=null">
+                is_forbidden = #{isForbidden},
+            </if>
+            <if test="auditTime!=null">
+                audit_time = #{auditTime},
+            </if>
+            <if test="businessStatus!=null">
+                business_status = #{businessStatus},
+            </if>
+            <if test="acceptAppointmentOrNot!=null">
+                accept_appointment_or_not = #{acceptAppointmentOrNot},
+            </if>
+            <if test="shopName!=null and shopName!=''">
+                shop_name = #{shopName},
+            </if>
+            <if test="category!=null and category!=''">
+                category = #{category},
+            </if>
+            <if test="shopPhone!=null and shopPhone!=''">
+                shop_phone = #{shopPhone},
+            </if>
+            <if test="address!=null and address!=''">
+                address = #{address},
+            </if>
+            <if test="businessHours!=null and businessHours!=''">
+                business_hours = #{businessHours},
+            </if>
+            <if test="detailedDescription!=null and detailedDescription!=''">
+                detailed_description = #{detailedDescription},
+            </if>
+            <if test="longitude!=null and longitude!=''">
+                longitude = #{longitude},
+            </if>
+            <if test="latitude!=null and latitude!=''">
+                latitude = #{latitude},
+            </if>
+            <if test="shopImgPath!=null and shopImgPath!=''">
+                shop_img_path = #{shopImgPath}
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <select id="getPetShopService" resultMap="shopServiceMap">
+        SELECT * FROM pet_shop_service WHERE 1=1
+        <if test="shopId!=null and shopId!=''">
+            and shop_id=#{shopId}
+        </if>
+
+    </select>
+
+    <select id="getPetShopServiceById" resultMap="shopServiceMap">
+        SELECT * FROM pet_shop_service WHERE id = #{id}
+    </select>
+
+    <delete id="delServiceById">
+        DELETE FROM pet_shop_service WHERE id=#{id}
+    </delete>
+
+    <update id="upDateShopServiceStatus">
+        UPDATE pet_shop_service SET status=#{status} WHERE id=#{id}
+    </update>
+
+    <insert id="addShopService">
+        INSERT INTO pet_shop_service(id,service_category,price,price_unit,shop_id,status,create_time,service_num)
+        VALUES (#{id},#{serviceCategory},#{price},#{priceUnit},#{shopId},#{status},#{createTime},#{serviceNum})
+    </insert>
+
+    <select id="getPetPeriphery" resultMap="petPeripheryMap">
+        SELECT * FROM pet_periphery WHERE 1=1
+        AND  shop_id=#{shopId}
+        <if test="keyword!=null and keyword!=''">
+            AND (NAME  like CONCAT('%',#{keyword},'%') OR brand like CONCAT('%',#{keyword},'%') OR TYPE  like CONCAT('%',#{keyword},'%') OR number like CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="color!=null and color!=''">
+            AND TYPE  like CONCAT('%',#{color},'%')
+        </if>
+        <if test="price!=null and price!=''">
+            <if test="price=='小于50'">
+                AND price BETWEEN 0 AND 50
+            </if>
+            <if test="price=='50-200'">
+                AND price BETWEEN 50 AND 200
+            </if>
+            <if test="price=='200-500'">
+                AND price BETWEEN 200 AND 500
+            </if>
+            <if test="price=='大于500'">
+                AND price > 500
+            </if>
+        </if>
+        ORDER BY create_time DESC
+        LIMIT #{startRow},#{pageSize}
+    </select>
+
+    <delete id="delPeripheryById">
+        DELETE FROM pet_periphery WHERE id=#{id}
+    </delete>
+
+    <update id="updatePeriphery">
+        UPDATE pet_periphery
+        <set>
+            name=#{name},
+            price=#{price},
+            brand=#{brand},
+            type=#{type},
+            number=#{number},
+            stock=#{stock},
+            img_path=#{imgPath},
+            weight=#{weight},
+            remarks=#{remarks},
+            name_of_manufacturer=#{nameOfManufacturer}
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <insert id="addPeriphery">
+        INSERT INTO pet_periphery(id,NAME,price,brand,TYPE,number,stock,sold,img_path,weight,remarks,shop_id,create_time,name_of_manufacturer,STATUS)
+        VALUES (#{id},#{name},#{price},#{brand},#{type},#{number},#{stock},#{sold},#{imgPath},#{weight},#{remarks},#{shopId},#{createTime},#{nameOfManufacturer},#{status})
+    </insert>
+
+    <select id="getPetPeripheryById" resultMap="petPeripheryMap">
+        SELECT * FROM pet_periphery WHERE id=#{id}
+    </select>
+    
+    <update id="updatePetPeripheryStatus">
+      UPDATE pet_periphery SET status=#{status} WHERE id=#{id}
+    </update>
+
+    <select id="getPetPeripheryCount" resultType="int">
+        SELECT COUNT(*) FROM pet_periphery WHERE shop_id=#{shopId} AND stock>0
+        <if test="keyword!=null and keyword!=''">
+            AND (NAME  like CONCAT('%',#{keyword},'%') OR brand  like CONCAT('%',#{keyword},'%') OR TYPE  like CONCAT('%',#{keyword},'%') OR number like CONCAT('%',#{keyword},'%'))
+        </if>
+        <if test="color!=null and color!=''">
+            AND TYPE  like CONCAT('%',#{color},'%')
+        </if>
+        <if test="price!=null and price!=''">
+            <if test="price=='小于50'">
+                AND price BETWEEN 0 AND 50
+            </if>
+            <if test="price=='50-200'">
+                AND price BETWEEN 50 AND 200
+            </if>
+            <if test="price=='200-500'">
+                AND price BETWEEN 200 AND 500
+            </if>
+            <if test="price=='大于500'">
+                AND price > 500
+            </if>
+        </if>
+    </select>
+
+    <select id="getPetShopMemberActivity" resultMap="petShopMemberActivityMap">
+        SELECT * FROM pet_shop_member_activity WHERE shop_id=#{shopId}
+        <if test="isEnd!=null">
+            AND is_end=#{isEnd}
+        </if>
+    </select>
+
+    <insert id="addActivity">
+        INSERT INTO pet_shop_member_activity(id,NAME,activity_time,score,remarks,shop_id,is_end,create_time)
+        VALUES(#{id},#{name},#{activityTime},#{score},#{remarks},#{shopId},#{isEnd},#{createTime})
+    </insert>
+
+    <update id="updateActivty">
+        UPDATE pet_shop_member_activity SET NAME=#{name},activity_time=#{activityTime},score=#{score},remarks=#{remarks} WHERE id=#{id}
+    </update>
+
+    <update id="updateShopActivityStatus">
+        UPDATE pet_shop_member_activity SET is_end = #{isEnd} WHERE id=#{id}
+    </update>
+
+    <update id="updateShopMemberScore">
+        UPDATE pet_shop_member SET score=score-#{score} WHERE shop_id=#{shopId} AND id=#{memberId}
+    </update>
+
+
+    <insert id="savePetShopMemberActivityRecord">
+        INSERT INTO pet_shop_member_activity_record(id,activity_id,member_id,number,create_time,shop_id,score,total_score)
+         VALUES(#{id},#{activityId},#{memberId},#{number},#{createTime},#{shopId},#{score},#{totalScore})
+    </insert>
+
+    <select id="getPetShopMemberActivityRecord" resultMap="petShopMemberActivityRecordMap">
+        SELECT * FROM pet_shop_member_activity_record WHERE shop_id=#{shopId} ORDER BY create_time DESC
+    </select>
+
+    <!--宠物店会员充值金额情况-->
+    <select id="getShopMemberRechargeMoney" resultType="java.util.HashMap">
+          SELECT SUM(amount) AS total,DATE_FORMAT(TIME,#{selectType}) AS dataName FROM pet_shop_member_record
+           WHERE shop_id=#{shopId}
+           <if test="startTime!=null and endTime!=null">
+               AND TIME BETWEEN #{startTime} AND #{endTime}
+           </if>
+           GROUP BY DATE_FORMAT(TIME,#{selectType})
+    </select>
+
+    <select id="getShopNewMember" resultType="java.util.HashMap">
+        SELECT COUNT(id) AS total,DATE_FORMAT(processing_time,#{selectType}) AS dataName FROM pet_shop_member
+        WHERE shop_id=#{shopId}
+        <if test="startTime!=null and endTime!=null">
+            AND processing_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY DATE_FORMAT(processing_time,#{selectType})
+    </select>
+
+    <select id="getShopMemberLevel" resultType="java.util.HashMap">
+        SELECT COUNT(LEVEL) AS total,LEVEL AS dataName  FROM pet_shop_member WHERE shop_id=#{shopId} GROUP BY LEVEL
+    </select>
+
+
+    <resultMap id="petShopMemberActivityRecordMap" type="petShopMemberActivityRecord">
+        <id property="id" column="id"></id>
+        <result property="activityId" column="activity_id"></result>
+        <result property="memberId" column="member_id"></result>
+        <result property="number" column="number"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="shopId" column="shop_id"></result>
+        <result property="score" column="score"></result>
+        <result property="totalScore" column="total_score"></result>
+    </resultMap>
+
+
+    <resultMap id="petShopMemberActivityMap" type="petShopMemberActivity">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <result property="activityTime" column="activity_time"></result>
+        <result property="score" column="score"></result>
+        <result property="remarks" column="remarks"></result>
+        <result property="shopId" column="shop_id"></result>
+        <result property="isEnd" column="is_end"></result>
+        <result property="createTime" column="create_time"></result>
+    </resultMap>
+
+    <resultMap id="petPeripheryMap" type="petPeriphery">
+        <id property="id" column="id"></id>
+        <result property="imgPath" column="img_path"></result>
+        <result property="shopId" column="shop_id"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="nameOfManufacturer" column="name_of_manufacturer"></result>
+    </resultMap>
+
+
+    <resultMap id="shopServiceMap" type="shopService">
+        <id property="id" column="id"></id>
+        <result property="serviceCategory" column="service_category"></result>
+        <result property="price" column="price"></result>
+        <result property="priceUnit" column="price_unit"></result>
+        <result property="shopId" column="shop_id"></result>
+        <result property="status" column="status"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="serviceNum" column="service_num"></result>
+    </resultMap>
+
+    <resultMap id="petShopUserOrderMap" type="petShopUserOrder">
+        <id property="id" column="id"></id>
+        <result property="shopId" column="shop_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="timeExplain" column="time_explain"></result>
+        <result property="replyStatus" column="reply_status"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="replyContent" column="reply_content"></result>
+        <result property="userName" column="user_name"></result>
+        <result property="userPhone" column="user_phone"></result>
+        <result property="replyTime" column="reply_time"></result>
+    </resultMap>
+
+    <resultMap id="petShopMemberRecordMap" type="petShopMemberRecord">
+        <id property="id" column="id"></id>
+        <result property="userId" column="user_id"></result>
+        <result property="personnelId" column="personnel_id"></result>
+        <result property="cardNumber" column="card_number"></result>
+        <result property="shopId" column="shop_id"></result>
+    </resultMap>
+
+    <resultMap id="petShopMemberMap" type="petShopMember">
+        <id property="id" column="id"></id>
+        <result property="userId" column="user_id"></result>
+        <result property="shopId" column="shop_id"></result>
+        <result property="processingTime" column="processing_time"></result>
+        <result property="memberNumber" column="member_number"></result>
+    </resultMap>
+
+
+    <resultMap id="petFoodMap" type="petFood">
+        <id property="id" column="id"></id>
+        <result property="shelfLife" column="shelf_life"></result>
+        <result property="placeOfOrigin" column="place_of_origin"></result>
+        <result property="storageMode" column="storage_mode"></result>
+        <result property="imgPath" column="img_path"></result>
+        <result property="foodSerialNumber" column="food_serial_number"></result>
+        <result property="dateOfManufacture" column="date_of_manufacture"></result>
+        <result property="addressOfManufacturer" column="address_of_manufacturer"></result>
+        <result property="nameOfManufacturer" column="name_of_manufacturer"></result>
+        <result property="shopId" column="shop_id"></result>
+        <result property="createTime" column="create_time"></result>
+    </resultMap>
+
+
+    <resultMap id="petShopMemberDiscountMap" type="petShopMemberDiscount">
+        <id property="id" column="id"></id>
+        <result property="upperLimitOne" column="upper_limit_one"></result>
+        <result property="upperLimitTwo" column="upper_limit_two"></result>
+        <result property="upperLimitThree" column="upper_limit_three"></result>
+        <result property="upperLimitFour" column="upper_limit_four"></result>
+        <result property="nameOne" column="name_one"></result>
+        <result property="nameTwo" column="name_two"></result>
+        <result property="nameThree" column="name_three"></result>
+        <result property="nameFour" column="name_four"></result>
+        <result property="discountOne" column="discount_one"></result>
+        <result property="discountTwo" column="discount_two"></result>
+        <result property="discountThree" column="discount_three"></result>
+        <result property="discountFour" column="discount_four"></result>
+        <result property="integralSum" column="integral_sum"></result>
+        <result property="shopId" column="shop_id"></result>
+    </resultMap>
+
+
+    <resultMap id="petShopMemberOpinionMap" type="petShopMemberOpinion">
+        <id property="id" column="id"></id>
+        <result property="shopId" column="shop_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="opinionContent" column="opinion_content"></result>
+        <result property="replyContent" column="reply_content"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="replyTime" column="reply_time"></result>
+        <result property="replyStatus" column="reply_status"></result>
+        <result property="shopMemberId" column="shop_member_id"></result>
+    </resultMap>
+
+    <resultMap id="petSalesRecordsMap" type="petSalesRecords">
+        <id property="id" column="id"></id>
+        <result property="productId" column="product_id"></result>
+        <result property="salesTime" column="sales_time"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="salesmanId" column="salesman_id"></result>
+        <result property="foldingRate" column="folding_rate"></result>
+        <result property="shopId" column="shop_id"></result>
+        <result property="isComplete" column="is_complete"></result>
+        <result property="productName" column="product_name"></result>
+        <result property="productNumber" column="product_number"></result>
+    </resultMap>
+
+    <resultMap id="petShopMap" type="petShop">
+        <id property="id" column="id"></id>
+        <result property="shopName" column="shop_name"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="shopPhone" column="shop_phone"></result>
+        <result property="businessHours" column="business_hours"></result>
+        <result property="shopImgPath" column="shop_img_path"></result>
+        <result property="detailedDescription" column="detailed_description"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="acceptAppointmentOrNot" column="accept_appointment_or_not"></result>
+        <result property="businessStatus" column="business_status"></result>
+        <result property="isForbidden" column="is_forbidden"></result>
+        <result property="auditTime" column="audit_time"></result>
+    </resultMap>
+
+    <resultMap id="petEncyclopediasMap" type="petEncyclopedias">
+        <id property="id" column="id"></id>
+        <result property="hairLength" column="hair_length"></result>
+        <result property="englishName" column="english_name"></result>
+        <result property="intelligenceQuotient" column="intelligence_quotient"></result>
+        <result property="countryOfOrigin" column="country_of_origin"></result>
+        <result property="coatColor" column="coat_color"></result>
+        <result property="detailCharacterities" column="detail_characterities"></result>
+        <result property="imgPath" column="img_path"></result>
+        <result property="stockCount" column="count"></result>
+        <result property="createTime" column="create_time"></result>
+    </resultMap>
+
+    <resultMap id="petMap" type="pet">
+        <id property="id" column="id"></id>
+        <result property="shape" column="shape"></result>
+        <result property="weight" column="weight"></result>
+        <result property="price" column="price"></result>
+        <result property="number" column="number"></result>
+        <result property="remarks" column="remarks"></result>
+        <result property="nickName" column="nick_name"></result>
+        <result property="hairLength" column="hair_length"></result>
+        <result property="imgPath" column="img_path"></result>
+        <result property="coatColor" column="coat_color"></result>
+        <result property="petEncyclopediasId" column="pet_encyclopedias_id"></result>
+        <result property="salesStatus" column="sales_status"></result>
+        <result property="shopId" column="shop_id"></result>
+        <result property="createTime" column="create_time"></result>
+        <association property="petEncyclopedias" javaType="petEncyclopedias">
+            <id property="id" column="id"></id>
+            <result property="name" column="name"></result>
+            <result property="alias" column="alias"></result>
+            <result property="shape" column="shape"></result>
+            <result property="weight" column="weight"></result>
+            <result property="life" column="life"></result>
+            <result property="price" column="price"></result>
+            <result property="function" column="function"></result>
+            <result property="origin" column="origin"></result>
+            <result property="category" column="category"></result>
+            <result property="hairLength" column="hair_length"></result>
+            <result property="englishName" column="english_name"></result>
+            <result property="intelligenceQuotient" column="intelligence_quotient"></result>
+            <result property="countryOfOrigin" column="country_of_origin"></result>
+            <result property="coatColor" column="coat_color"></result>
+            <result property="detailCharacterities" column="detail_characterities"></result>
+            <result property="imgPath" column="img_path"></result>
+            <result property="stockCount" column="count"></result>
+            <result property="createTime" column="create_time"></result>
+        </association>
+    </resultMap>
+
+</mapper>

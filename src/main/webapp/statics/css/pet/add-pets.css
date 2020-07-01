@@ -1,0 +1,63 @@
+.add-pet{
+	min-height: 825px;
+	background: white;
+	margin: 20px auto 70px;
+	margin-left: 15px !important;
+	margin-right: 15px !important;
+}
+.pet-value-name{
+	text-align: right;
+	line-height: 35px;
+}
+.tab-pane .row{
+	margin-top: 20px;
+}
+.pet-origin p{
+	margin-top: 6px;
+}
+.save-pets{
+	text-align: right;
+	padding-right: 15px;
+}
+/*
+.petImgShow img{
+	width: 24%;
+	height: 300px;
+	margin-right: 5px;
+}*/
+.img-one{
+	position: relative;
+}
+.img-one img{
+	width: 100%;
+	height: 300px;
+}
+.img-one span{
+	position: absolute;
+	top: 5px;
+	right: 20px;
+	color: red;
+	cursor: pointer;
+}
+.img-one span:hover{
+	color: orange;
+}
+
+.add-pet1 .nav-tabs>li>a {
+	border-radius: 0 !important;
+	border-top: 0 !important;
+	border-left: 0 !important;
+	border: none;
+}
+
+.add-pet1 .nav-tabs>li.active>a, .add-pet1 .nav-tabs>li.active>a:focus, .add-pet1 .nav-tabs>li.active>a:hover{
+	background-color: #4980b5;
+	color: white;
+	border: none;
+}
+
+.page-btn{
+	position: absolute;
+	top: -12px;
+	right: 20px;
+}

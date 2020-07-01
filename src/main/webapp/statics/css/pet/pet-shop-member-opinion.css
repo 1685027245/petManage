@@ -1,0 +1,120 @@
+.shop-member{
+	padding: 20px;
+	margin-bottom: 50px;
+}
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+	z-index: 0;
+}
+.shop-member-content{
+	/*height: 790px;*/
+	background: white;
+	border: 1px solid #CCCCCC;
+	margin: 0;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	border-radius: .25rem;
+}
+.tab-content {
+	padding-right: 15px;
+}
+
+.shop-member-user{
+	padding-left: 15px;
+}
+.shop-member-top{
+	height: 56px;
+	background: rgba(0,0,0,.03);
+	border-bottom: 1px solid rgba(111,111,111,.13);
+	padding: 15px;
+}
+.shop-member-top-name{
+	font-size: 18px;
+}
+.shop-member-top-button{
+	margin-top: -5px;
+}
+.shop-member-top-button i{
+	margin-right: 5px;
+}
+ .shop-member-top-button button{
+	 background: #0f9df7;
+	 color: white;
+ }
+.shop-member-top-button button:hover{
+	background: #0283D6;
+	color: white;
+}
+.shop-member-top-button button:active{
+	background: #0f9df7;
+	color: white;
+}
+.shop-member-top-button button:focus{
+	background: #0f9df7;
+	color: white;
+}
+
+.shop-member-top-name i{
+	margin-right: 5px;
+}
+.shop-member-input-all{
+	margin-bottom: 10px;
+}
+.shop-member-title{
+	text-align: right;
+	padding-top: 8px;
+}
+.shop-member-input{
+	margin-top: 25px;
+}
+.shop-member-input:first-child{
+	margin-top: 0;
+}
+.fixed-table-body {
+	overflow-x: auto;
+	overflow-y: auto;
+	height: 630px !important;
+}
+.shop-member-dialog-title{
+	text-align: left;
+	padding-top: 10px;
+	padding-left: 30px !important;
+}
+.shop-member-recharge{
+	text-align: right;
+	padding-top: 8px;
+}
+.shop-member-recharge-input{
+	padding-left: 0 !important;
+}
+.shop-member-number{
+	text-align: left;
+	padding-top: 8px;
+	padding-left: 0 !important;
+}
+.pet-all-dialog{
+	padding-left: 20px;
+	font-weight: bold;
+}
+.pet-value-dialog{
+	font-size: 14px;
+	padding-top: 10px;
+}
+.pet-value-dialog:last-child{
+	padding-bottom: 10px;
+}
+.shop-member-content .nav-tabs>li>a {
+	border-radius: 0 !important;
+	border-top: 0 !important;
+	border-left: 0 !important;
+}
+.shop-member-content .nav-tabs>li.active>a,.shop-member-content .nav-tabs>li.active>a:focus,.shop-member-content .nav-tabs>li.active>a:hover{
+	background-color: #4980b5 ;
+	color: white ;
+	border: none;
+}
+.shop-member-content .nav-tabs {
+	border-bottom: 1px solid #4980b5;
+}
+.shop-member-content .nav>li>a:hover {
+	border-color:transparent;
+}

@@ -1,0 +1,58 @@
+.add-pet{
+	/*min-height: 780px;*/
+	background: white;
+	margin: 20px auto 70px;
+	margin-left: 15px !important;
+	margin-right: 15px !important;
+}
+.add-pet1{
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-bottom: 30px;
+}
+.pet-value-title{
+	text-align: left;
+	border-bottom: 1px solid #2277ee;
+	border-left: 5px solid #2277ee;
+	background: white;
+}
+.pet-value-title h3{
+	margin-top: 10px;
+}
+.pet-value-name{
+	margin-top: 30px;
+	/* line-height: 35px; */
+	font-size: 14px;
+	padding-left: 70px;
+}
+.pet-value-img{
+	padding-left: 60px;
+}
+.pet-value-img img{
+	width: 24%;
+	height: 250px;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+.pet-value-button{
+	line-height: 45px;
+}
+.pet-value-special{
+	padding-right: 70px;
+	line-height: 25px;
+}
+.pet-price-all{
+	padding-left: 35px;
+
+}
+.pet-price{
+	color: red;
+}
+.left-label-title{
+	text-align: right;
+	padding-top: 8px;
+}
+.right-label-name{
+	padding-top: 8px;
+	font-size: 14px;
+}

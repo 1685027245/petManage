@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace的值就是dao接口的完整路径，就这个demo而言namespace 就是userDao.java的完整路径-->
+<mapper namespace="com.zy.dao.UserMapper">
+    <select id="getAllUser" resultMap="userMap">
+        select  * from user where 1=1
+        <if test="id!=null and id!=''">
+            AND id=#{id}
+        </if>
+        <if test="userNumber!=null and userNumber!=''">
+            AND user_number=#{userNumber}
+        </if>
+    </select>
+
+    <select id="hasUser"  resultMap="userMap">
+        select  * from user where user_number = #{userNumber} or  phone = #{userNumber}
+    </select>
+
+    <!--记录最后登录时间-->
+    <update id="lastLoginTime">
+        UPDATE USER SET last_login_time = NOW() WHERE id=#{id}
+    </update>
+
+    <select id="getUserById"  resultMap="userMap">
+        select  * from user where id = #{id}
+    </select>
+
+    <select id="getUserRoleById"  resultMap="userRoleMap">
+        SELECT * FROM user_role WHERE id IN (SELECT role_id FROM user_role_relation WHERE user_id = #{id})
+    </select>
+
+    <!--注册-->
+    <insert id="registerUser" parameterType="user">
+        INSERT INTO USER(id,user_name,password,phone,is_forbidden,salt,img_path,create_time,last_login_time,user_number,address,email,sex,age)
+        VALUES(#{id},#{userName},#{password},#{phone},#{isForbidden},#{salt},#{imgPath},NOW(),NOW(),#{userNumber},#{address},#{email},#{sex},#{age})
+    </insert>
+
+    <!--判断是否有角色关联-->
+    <select id="hasRoleRelationShip" resultType="int">
+        SELECT COUNT(*) FROM user_role_relation WHERE user_id=#{userId} AND role_id=#{roleId}
+    </select>
+    <delete id="delUserRoleRelation">
+        DELETE FROM user_role_relation WHERE user_id=#{userId}
+    </delete>
+
+    <!--角色绑定-->
+    <insert id="bindingRoleRelationship" parameterType="userRoleRelation">
+        INSERT INTO user_role_relation(id,user_id,role_id)
+        VALUES(#{id},#{userId},#{roleId})
+    </insert>
+
+    <select id="getUserCount" resultType="int">
+        select count(*) from user;
+    </select>
+
+    <!--更新用户-->
+    <update id="updateUser">
+        UPDATE USER
+        <set>
+            <if test="userName!=null and userName!=''">
+                user_name = #{userName},
+            </if>
+            <if test="userNumber!=null and userNumber!=''">
+                user_number = #{userNumber},
+            </if>
+            <if test="password!=null and password!=''">
+                PASSWORD =#{password},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone =#{phone},
+            </if>
+            <if test="address!=null and address!=''">
+                address =#{address},
+            </if>
+            <if test="imgPath!=null and imgPath!=''">
+                img_path =#{imgPath},
+            </if>
+            <if test="email!=null and email!=''">
+                email =#{email},
+            </if>
+            <if test="sex!=null and sex!=''">
+                sex =#{sex},
+            </if>
+            <if test="age!=null and age!=''">
+                age = #{age},
+            </if>
+            <if test="forbidden!=null">
+                is_forbidden = #{forbidden},
+            </if>
+                update_time =NOW()
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <update id="findPwd">
+        UPDATE USER SET PASSWORD=#{newPwd} WHERE phone=#{phone}
+    </update>
+
+
+    <resultMap id="userMap" type="user">
+        <id property="id" column="id"></id>
+        <result property="userName" column="user_name"></result>
+        <result property="userNumber" column="user_number"></result>
+        <result property="imgPath" column="img_path"></result>
+        <result property="isForbidden" column="is_forbidden"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="updateTime" column="update_time"></result>
+        <result property="lastLoginTime" column="last_login_time"></result>
+    </resultMap>
+
+    <resultMap id="userRoleMap" type="userRole">
+        <id property="id" column="id"></id>
+        <result property="roleName" column="role_name"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="updateTime" column="update_time"></result>
+    </resultMap>
+
+</mapper>

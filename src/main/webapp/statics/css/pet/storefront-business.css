@@ -1,0 +1,145 @@
+.top-title{
+	padding-top: 30px;
+}
+.top-title-common{
+	padding-right: 10px;
+	color: white;
+	font-size: 36px;
+	text-align: center;
+}
+.top-title1{
+	background: #64b0f2;
+	height: 143px;
+	padding: 15px 30px;
+}
+.top-title2{
+	background: #f1b53d;
+	height: 143px;
+	padding: 15px 50px;
+}
+.top-title3{
+	background: #3db9dc;
+	height: 143px;
+	padding: 15px 30px;
+}
+.top-title4{
+	background: #ff5d48;
+	height: 143px;
+	padding: 15px 30px;
+}
+.top-title1:hover{
+	background: #337ab7;
+}
+.top-title2:hover{
+	background: #337ab7;
+}
+.top-title3:hover{
+	background: #337ab7;
+}
+.top-title4:hover{
+	background: #337ab7;
+}
+
+
+
+.top-title-name{
+	line-height: 120px;
+}
+.top-title i {
+    font-size: 80px;
+    margin-top: 15px;
+}
+.current-order{
+	margin-top: 10px;
+	/*height: 432px;*/
+}
+.order-content{
+	border: 1px solid #ccc;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding: 10px 0 20px 0;
+	background: white;
+}
+.pet-price-dialog{
+	color: red;
+	padding-left: 5px;
+	font-size: 20px;
+	font-weight: bold;
+}
+.pet-value-dialog{
+	font-size: 14px;
+	padding-top: 10px;
+}
+.pet-all-dialog{
+	padding-left: 50px;
+}
+
+.pet-value-img img{
+	width: 24%;
+	height: 150px;
+	margin-top: 10px;
+	/*margin-left: 1%;*/
+	margin-left: 5px;
+}
+.pet-value-more{
+	margin-top: 15px;
+	font-size: 12px;
+}
+.pet-value-more a:hover{
+	text-decoration: none;
+}
+.left-label-title{
+	text-align: right;
+	padding-top: 8px;
+}
+.edit-dialog-all{
+	margin-top: 5px;
+}
+.order-operation{
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	height: 56px;
+	background: white;
+	padding: 20px;
+	margin-top: 20px;
+	border: 1px solid #CCCCCC;
+	font-size: 16px;
+	font-weight: bold;
+}
+.order-operation-right{
+	margin-top: -10px;
+	text-align: right;
+}
+
+.right-label-name{
+	padding-top: 8px;
+}
+.right-label-name-noNumber{
+	color: red;
+}
+#noMemberNumber{
+	text-align: center;
+	margin-top: 10px;
+	display: none;
+}
+.no-member-number{
+	display: none;
+}
+#noEnoughMoney{
+	text-align: center;
+	margin-top: 10px;
+	display: none;
+}
+.memberNumberSure{
+	margin-left: -84px;
+}
+.memberNumberSure button{
+	border-bottom-left-radius: 0;
+	border-top-left-radius: 0;
+}
+.toPage{
+	color: white;
+}
+.toPage:hover{
+	color: white;
+}

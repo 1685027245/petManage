@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace的值就是dao接口的完整路径，就这个demo而言namespace 就是userDao.java的完整路径-->
+<mapper namespace="com.zy.dao.OpenModuleMapper">
+
+    <insert id="addPetShop" parameterType="petShop">
+        INSERT INTO pet_shop(id,shop_name,user_id,category,address,shop_phone,business_hours,shop_img_path,detailed_description,create_time,accept_appointment_or_not,business_status,is_forbidden,longitude,latitude,audit_time)
+        VALUES(#{id},#{shopName},#{userId},#{category},#{address},#{shopPhone},#{businessHours},#{shopImgPath},#{detailedDescription},#{createTime},#{acceptAppointmentOrNot},#{businessStatus},#{isForbidden},#{longitude},#{latitude},#{auditTime})
+    </insert>
+
+    <insert id="addPetShopMemberDiscount" parameterType="PetShopMemberDiscount">
+        INSERT INTO pet_shop_member_discount(id,shop_id) VALUES (#{id},#{shopId})
+    </insert>
+
+    <update id="updateUserRoleRelation">
+        UPDATE user_role_relation SET  role_id=#{roleId} WHERE user_id=#{userId}
+    </update>
+
+    <select id="getNearbyPetShop" resultMap="petShopMap">
+        <if test="latitude!=null and latitude!='' and longitude!=null and longitude!=''">
+            SELECT
+            *,
+            ROUND(
+            6378.138 * 2 * ASIN(
+            SQRT(
+            POW(
+            SIN(
+            (#{latitude} * PI() / 180 - latitude* PI() / 180) / 2),2)
+            + COS( #{latitude} * PI() / 180) * COS(latitude * PI() / 180) * POW(
+            SIN(
+            (#{longitude} * PI() / 180 -  longitude* PI() / 180) / 2),2)
+            )
+            ) * 1000
+            ) AS distance FROM pet_shop WHERE is_forbidden='启用' ORDER BY distance LIMIT #{startRow},#{pageSize}
+        </if>
+        <if test="latitude==null or longitude==null or latitude=='' or longitude==''">
+            select * from pet_shop WHERE is_forbidden='启用'
+            <if test="keyword!=null and keyword!=''">
+                and (shop_name LIKE CONCAT('%',#{keyword},'%')
+                or category LIKE CONCAT('%',#{keyword},'%')
+                or address LIKE CONCAT('%',#{keyword},'%')
+                or detailed_description LIKE CONCAT('%',#{keyword},'%')
+                or business_status LIKE CONCAT('%',#{keyword},'%'))
+            </if>
+            LIMIT #{startRow},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getNearbyPetShopCount" resultType="int">
+            select count(*) from pet_shop WHERE is_forbidden='启用'
+            <if test="keyword!=null and keyword!=''">
+                and (shop_name LIKE CONCAT('%',#{keyword},'%')
+                or category LIKE CONCAT('%',#{keyword},'%')
+                or address LIKE CONCAT('%',#{keyword},'%')
+                or detailed_description LIKE CONCAT('%',#{keyword},'%')
+                or business_status LIKE CONCAT('%',#{keyword},'%'))
+            </if>
+    </select>
+
+    <select id="getAllPetShopCount" resultType="int">
+        select count(*) from pet_shop
+    </select>
+
+    <select id="getPetInfoCount" resultType="int">
+        select count(*) FROM pet_information
+    </select>
+
+    <!--新增宠物店浏览记录-->
+    <insert id="addPetShopBrowseRecord" parameterType="petShopBrowseRecord">
+        INSERT INTO pet_shop_browse_record(id,shop_id,user_id,create_time)
+        VALUES (#{id},#{shopId},#{userId},#{createTime})
+    </insert>
+
+    <!--新增宠物店浏览记录-->
+    <insert id="addOrder" parameterType="petShopUserOrder">
+        INSERT INTO pet_shop_user_order(id,shop_id,user_id,category,time_explain,result,remarks,reply_status,create_time,reply_content,user_name,user_phone)
+         VALUES (#{id},#{shopId},#{userId},#{category},#{timeExplain},#{result},#{remarks},#{replyStatus},#{createTime},#{replyContent},#{userName},#{userPhone})
+    </insert>
+
+    <select id="getPetShopUserOrder" resultMap="petShopUserOrderMap">
+        SELECT * FROM pet_shop_user_order  WHERE 1=1
+        <if test="shopId!=null and shopId!=''">
+           AND  shop_id=#{shopId}
+        </if>
+        <if test="userId!=null and userId!=''">
+            AND user_id=#{userId}
+        </if>
+        <if test="result!=null and result!=''">
+            <if test="result=='接受'">
+                AND (result=#{result} OR result='预约取消')
+            </if>
+            <if test="result!='接受'">
+                AND result=#{result}
+            </if>
+        </if>
+        <if test="replyStatus!=null and replyStatus!=''">
+            <if test="result=='接受'">
+                AND (reply_status='已答复' OR reply_status='待答复')
+            </if>
+            <if test="result!='接受'">
+                AND reply_status=#{replyStatus}
+            </if>
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getPetInformation" resultMap="petInformationMap">
+        SELECT p1.*,u1.user_name as userName,u1.img_path as imgPath FROM pet_information p1,user u1
+        WHERE p1.user_id=u1.id
+        <if test="status!=null and status!=''">
+            <if test="status=='已发布'">
+                AND (p1.status=#{status} OR p1.status='置顶')
+            </if>
+            <if test="status!='已发布'">
+                AND p1.status=#{status}
+            </if>
+        </if>
+        <if test="category!=null and category!=''">
+            AND p1.category=#{category}
+        </if>
+        ORDER BY create_time DESC
+        <if test="startRow!='-1'">
+            LIMIT #{startRow},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getPetInformationById" resultMap="petInformationMap">
+        SELECT p1.*,u1.user_name as userName,u1.img_path as imgPath FROM pet_information p1,user u1
+        WHERE p1.user_id=u1.id and p1.id=#{id}
+    </select>
+
+    <!--取消预约-->
+    <update id="cancleOrder">
+        UPDATE pet_shop_user_order SET result='预约取消' WHERE id=#{id}
+    </update>
+
+
+    <select id="getMoments" resultMap="momentsMap">
+        SELECT * FROM pet_moments WHERE user_id=#{userId} AND status='已发布' ORDER BY create_time DESC
+    </select>
+
+    <select id="getIsSaveMoments" resultMap="momentsMap">
+        SELECT * FROM pet_moments WHERE user_id=#{userId} AND status='草稿'
+    </select>
+
+    <select id="getMomentesById" resultMap="momentsMap">
+        UPDATE pet_moments SET browse_count = browse_count+1 WHERE id=#{id};
+        SELECT * FROM pet_moments WHERE id=#{id};
+    </select>
+
+    <delete id="delMoments">
+        DELETE FROM pet_moments WHERE 1=1 AND id=#{id}
+    </delete>
+
+    <update id="updateMomentes">
+        UPDATE pet_moments SET content=#{content},img_path=#{imgPath},create_time=#{createTime},STATUS=#{status} WHERE id=#{id}
+    </update>
+
+    <insert id="addMoments">
+        INSERT INTO pet_moments(id,user_id,content,img_path,create_time,status,user_img,user_name)
+        VALUES(#{id},#{userId},#{content},#{imgPath},#{createTime},#{status},#{userImg},#{userName})
+    </insert>
+
+    <insert id="addPetShopComment">
+      INSERT INTO pet_shop_comment(id,shop_id,user_id,comment_content,star_rating,create_time,user_name,user_img,order_id)
+      VALUES (#{id},#{shopId},#{userId},#{commentContent},#{starRating},#{createTime},#{userName},#{userImg},#{orderId})
+    </insert>
+
+    <update id="updateComment">
+        UPDATE pet_shop_comment SET  comment_content=#{commentContent},star_rating=#{starRating} WHERE id=#{id}
+    </update>
+
+    <select id="getPetShopComment" resultMap="petShopCommentMap">
+        SELECT * FROM pet_shop_comment WHERE 1=1
+        <if test="shopId!=null and shopId!=''">
+            AND shop_id=#{shopId}
+        </if>
+        ORDER BY create_time DESC
+        LIMIT #{startRow},#{pageSize}
+    </select>
+
+    <select id="getPetShopCommentCount" resultType="int" >
+        SELECT count(*) FROM pet_shop_comment WHERE 1=1 AND shop_id=#{shopId}
+    </select>
+
+    <select id="getPetshopCommentByOrderId" resultMap="petShopCommentMap">
+        SELECT * FROM pet_shop_comment WHERE order_id=#{orderId}
+    </select>
+
+    <select id="getPetShopScore" resultType="double">
+        SELECT IFNULL(AVG(star_rating),0) FROM pet_shop_comment WHERE shop_id=#{shopId}
+    </select>
+
+    <insert id="addOpinion">
+        INSERT INTO pet_shop_member_opinion(id,shop_id,user_id,opinion_content,create_time,shop_member_id)
+        VALUES(#{id},#{shopId},#{userId},#{opinionContent},#{createTime},#{shopMemberId})
+    </insert>
+
+
+    <resultMap id="petShopCommentMap" type="petShopComment">
+        <id property="id" column="id"></id>
+        <result property="shopId" column="shop_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="commentContent" column="comment_content"></result>
+        <result property="starRating" column="star_rating"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="userName" column="user_name"></result>
+        <result property="userImg" column="user_img"></result>
+        <result property="orderId" column="order_id"></result>
+    </resultMap>
+
+
+    <resultMap id="momentsMap" type="moments">
+        <id property="id" column="id"></id>
+        <result property="userId" column="user_id"></result>
+        <result property="content" column="content"></result>
+        <result property="imgPath" column="img_path"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="userImg" column="user_img"></result>
+        <result property="userName" column="user_name"></result>
+        <result property="browseCount" column="browse_count"></result>
+    </resultMap>
+
+    <resultMap id="petInformationMap" type="petInformation">
+        <id property="id" column="id"></id>
+        <result property="createTime" column="create_time"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="picPath" column="pic_path"></result>
+    </resultMap>
+
+    <resultMap id="petShopMap" type="petShop">
+        <id property="id" column="id"></id>
+        <result property="shopName" column="shop_name"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="shopPhone" column="shop_phone"></result>
+        <result property="businessHours" column="business_hours"></result>
+        <result property="shopImgPath" column="shop_img_path"></result>
+        <result property="detailedDescription" column="detailed_description"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="acceptAppointmentOrNot" column="accept_appointment_or_not"></result>
+        <result property="businessStatus" column="business_status"></result>
+        <result property="isForbidden" column="is_forbidden"></result>
+        <result property="auditTime" column="audit_time"></result>
+    </resultMap>
+
+    <resultMap id="petShopUserOrderMap" type="petShopUserOrder">
+        <id property="id" column="id"></id>
+        <result property="shopId" column="shop_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="timeExplain" column="time_explain"></result>
+        <result property="replyStatus" column="reply_status"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="replyContent" column="reply_content"></result>
+        <result property="userName" column="user_name"></result>
+        <result property="userPhone" column="user_phone"></result>
+        <result property="replyTime" column="reply_time"></result>
+    </resultMap>
+</mapper>

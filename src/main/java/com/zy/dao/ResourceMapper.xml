@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace的值就是dao接口的完整路径，就这个demo而言namespace 就是userDao.java的完整路径-->
+<mapper namespace="com.zy.dao.ResourceMapper">
+
+    <select id="getAllSource" resultMap="resourceMap">
+        SELECT * FROM resource ORDER BY order_num DESC
+    </select>
+
+    <insert id="addResource" parameterType="resource">
+      INSERT INTO resource(id,value,perms,order_num) VALUES (#{id},#{value},#{perms},#{orderNum})
+    </insert>
+
+    <delete id="delResource">
+        DELETE FROM resource WHERE id=#{id}
+    </delete>
+
+    <update id="updateResource">
+        UPDATE resource SET VALUE=#{value},perms=#{perms},order_num=#{orderNum} WHERE id=#{id}
+    </update>
+
+    <select id="getAllPermission" resultMap="permissionMap">
+        select * from permission
+    </select>
+
+    <select id="getAllRole" resultMap="userRoleMap">
+        select * from user_role where 1=1
+        <if test="status!=null and status!=''">
+            and status = #{status}
+        </if>
+    </select>
+
+    <delete id="delUserRole">
+        DELETE FROM user_role WHERE id=#{roleId};
+        DELETE FROM user_role_relation WHERE role_id=#{roleId};
+    </delete>
+
+    <insert id="addUserRole">
+        INSERT INTO user_role(id,role_name,alias,STATUS,create_time)
+        VALUES(#{id},#{roleName},#{alias},#{status},#{createTime})
+    </insert>
+
+    <update id="updateRole" parameterType="userRole">
+       UPDATE user_role
+       <set>
+           <if test="roleName!=null and roleName!=''">
+               role_name=#{roleName},
+           </if>
+           <if test="alias!=null and alias!=''">
+               alias=#{alias},
+           </if>
+           <if test="status!=null and status!=''">
+               status=#{status},
+           </if>
+            update_time=Now()
+       </set>
+        WHERE id=#{id}
+    </update>
+
+
+    <resultMap id="resourceMap" type="resource">
+        <id property="id" column="id"></id>
+        <result property="orderNum" column="order_num"></result>
+        <result property="createTime" column="create_time"></result>
+    </resultMap>
+
+    <resultMap id="permissionMap" type="permission">
+        <id property="id" column="id"></id>
+        <result property="permissionId" column="permission_id"></result>
+        <result property="parentId" column="parent_id"></result>
+        <result property="orderNum" column="order_num"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="updateTime" column="update_time"></result>
+    </resultMap>
+
+    <resultMap id="userRoleMap" type="userRole">
+        <id property="id" column="id"></id>
+        <result property="roleName" column="role_name"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="updateTime" column="update_time"></result>
+    </resultMap>
+</mapper>

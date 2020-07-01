@@ -1,0 +1,30 @@
+.am-topbar-logo{
+    text-decoration: none !important;
+}
+a:hover,a:active,a:focus{
+    text-decoration: none !important;
+}
+body,html{
+    font-size: 14px;
+}
+.info-category{
+    background: #2277ee;
+    display: inline-block;
+    color: white;
+    padding: 2px 3px;
+    font-size: 10px;
+    margin-left: 5px;
+}
+.animal:hover{
+    color: #2277ee;
+    cursor: pointer;
+}
+.show-img{
+    border: 1px solid #2277ee;
+}
+.info-content{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}

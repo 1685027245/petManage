@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- namespace的值就是dao接口的完整路径，就这个demo而言namespace 就是userDao.java的完整路径-->
+<mapper namespace="com.zy.dao.SystemModuleMapper">
+
+    <insert id="addEncyclopedias" parameterType="petEncyclopedias">
+      INSERT INTO pet_encyclopedias(id,name,alias,shape,hair_length,english_name,intelligence_quotient,country_of_origin,weight,life,price,coat_color,function,detail_characterities,img_path,origin,category,create_time,environment,varieties)
+      VALUES (#{id},#{name},#{alias},#{shape},#{hairLength},#{englishName},#{intelligenceQuotient},#{countryOfOrigin},#{weight},#{life},#{price},#{coatColor},#{function},#{detailCharacterities},#{imgPath},#{origin},#{category},#{createTime},#{environment},#{varieties})
+    </insert>
+
+    <delete id="delEncyclopedias">
+        DELETE FROM pet_encyclopedias WHERE id = #{id}
+    </delete>
+
+    <update id="editEncyclopedias" parameterType="petEncyclopedias">
+        UPDATE pet_encyclopedias
+        <set>
+            name=#{name},
+            alias=#{alias},
+            shape=#{shape},
+            hair_length=#{hairLength},
+            english_name=#{englishName},
+            intelligence_quotient=#{intelligenceQuotient},
+            country_of_origin=#{countryOfOrigin},
+            weight=#{weight},
+            life=#{life},
+            price=#{price},
+            coat_color=#{coatColor},
+            function=#{function},
+            detail_characterities=#{detailCharacterities},
+            img_path=#{imgPath},
+            origin=#{origin},
+            category= #{category}
+        </set>
+        WHERE id=#{id}
+    </update>
+
+
+    <select id="getOpenIndexData" resultMap="openIndexDataMap">
+        SELECT * FROM open_index_data
+    </select>
+
+    <update id="updateOpenIndexData" parameterType="openIndexData">
+      UPDATE open_index_data
+      <set>
+          platform_description=#{platformDescription},
+          platform_img=#{platformImg},
+          encyclopedia_title=#{encyclopediaTitle},
+          encyclopedia_description=#{encyclopediaDescription},
+          information_title=#{informationTitle},
+          information_description=#{informationDescription},
+          shop_title=#{shopTitle},
+          shop_description=#{shopDescription}
+      </set>
+        WHERE id=#{id}
+    </update>
+
+    <update id="updatePetInfoStatus">
+        <if test="status=='置顶'">
+            UPDATE pet_information SET status = '已发布' WHERE status = '置顶';
+        </if>
+        UPDATE pet_information SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <delete id="delPetInfo">
+        DELETE FROM pet_information WHERE id = #{id}
+    </delete>
+
+    <insert id="savePetInfo">
+        INSERT INTO pet_information(id,title,content,category,create_time,user_id,status,pic_path)
+        VALUES (#{id},#{title},#{content},#{category},#{createTime},#{userId},#{status},#{picPath})
+    </insert>
+
+    <update id="updatePetInfo">
+        UPDATE pet_information
+        <set>
+            title=#{title},
+            content=#{content},
+            category=#{category},
+            status=#{status},
+            pic_path=#{picPath}
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <!--用户情况分析-->
+    <select id="getNewUserAnalysis"  resultType="java.util.HashMap">
+        SELECT COUNT(id) AS total,DATE_FORMAT(create_time,#{selectType}) AS dataName FROM USER  WHERE 1=1
+        <if test="startTime!=null and endTime!=null">
+           AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY DATE_FORMAT(create_time,#{selectType})
+    </select>
+
+    <!--宠物店情况分析-->
+    <select id="getNewShopAnalysis" resultType="java.util.HashMap">
+        SELECT COUNT(id) AS total,DATE_FORMAT(create_time,#{selectType}) AS dataName FROM pet_shop WHERE 1=1
+        <if test="startTime!=null and endTime!=null">
+            AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+         GROUP BY DATE_FORMAT(create_time,#{selectType})
+    </select>
+
+    <resultMap id="openIndexDataMap" type="openIndexData">
+        <id property="id" column="id"></id>
+        <result property="platformDescription" column="platform_description"></result>
+        <result property="platformImg" column="platform_img"></result>
+        <result property="encyclopediaTitle" column="encyclopedia_title"></result>
+        <result property="encyclopediaDescription" column="encyclopedia_description"></result>
+        <result property="informationTitle" column="information_title"></result>
+        <result property="informationDescription" column="information_description"></result>
+        <result property="shopTitle" column="shop_title"></result>
+        <result property="shopDescription" column="shop_description"></result>
+    </resultMap>
+</mapper>

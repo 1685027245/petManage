@@ -1,0 +1,88 @@
+.top-title{
+    font-size: 26px;
+    margin: 20px 0;
+}
+#mapSelect{
+    height: 400px;
+    margin: 20px 0;
+    border:1px solid #2277ee;
+}
+
+.form-horizontal .control-label {
+    padding-top: 5px;
+}
+.text-descript{
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+}
+.container{
+    background:white;
+    margin:30px auto;
+}
+.content-body{
+    margin-right: 40px;
+}
+
+#mapInput{
+    position: relative;
+}
+#input-info{
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    background: white;
+    z-index: 1;
+    border: 1px solid #2277ee;
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    display: none;
+    padding: 0 !important;
+}
+#input-info span{
+    display:block;
+    font-size:15px;
+    line-height:30px;
+    padding-left: 20px;
+}
+#input-info span:hover{
+    background: rgba(135,206,235,0.5) ;
+    cursor: pointer;
+}
+.close-map{
+    text-align: right;
+    padding: 5px;
+    padding-right: 10px;
+}
+.close-map strong:hover{
+    cursor: pointer;
+    color: red;
+}
+.modal-body {
+    text-align: center;
+}
+.pet-img-show .img-ioc{
+    width: 300px;
+    height: 200px;
+   /* border: 1px solid #2277ee;*/
+    padding: 0;
+    margin-top: 10px;
+    margin-left: 8px;
+    text-align: center;
+    position: relative; /*脱离文档流*/
+    top: 50%; /*偏移*/
+}
+/*.pet-img-show .img-ioc:first-child{
+    margin-left: 0px;
+}*/
+.pet-img-show .img-ioc img{
+    width: 100%;
+    height: 100%;
+}
+.form-control{
+    background: white !important;
+}
+textarea{
+    background: white;
+}

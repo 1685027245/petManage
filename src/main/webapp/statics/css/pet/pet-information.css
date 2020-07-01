@@ -1,0 +1,148 @@
+.top-title{
+	/*padding-top: 0px;*/
+	/*margin: 0;
+	padding: 0;*/
+	/*background: white;
+	padding-bottom: 20px;
+	padding-left: 17px;
+	padding-right: 15px;*/
+	margin-top: 30px;
+}
+.search-pet .form-control{
+	display: inline-block !important;
+	width: 160px ;
+}
+.input-spe{
+	width: 200px !important;
+}
+.top-title label{
+	margin-left: 20px;
+}
+.pet-information{
+	margin-top: 20px;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding: 0;
+	background: white;
+	height: 180px;
+	border: 1px solid #2277ee;
+}
+.info-title{
+	font-weight: bold;
+	font-size: 16px;
+	border-left: 3px solid #2277ee;
+	padding-left: 10px;
+	padding-top: 2px;
+	margin-top: 6px;
+}
+.info-img{
+	padding-left: 0 !important;
+	padding-right: 10px !important;
+}
+.info-img img{
+	width: 100%;
+	height: 100%;
+	padding: 10px;
+}
+.info-msg{
+	padding: 5px 0 10px 20px;
+	/*margin-left: -50px;*/
+}
+.info-content{
+	margin-top: 14px;
+}
+.info-content span {
+	margin-left: 40px;
+	display: inline-block;
+	min-width: 100px;
+}
+.info-content span:first-child{
+	margin-left: 13px;
+}
+.info-price{
+	text-align: right;
+	height: 100%;
+}
+.info-operation{
+	position: absolute;
+	bottom: 10px;
+	right: 15px;
+}
+.info-item h3{
+	text-align: right;
+}
+.pet-category{
+	display: inline-block;
+	margin-left: 5px;
+	background: #0099FF;
+	color: white;
+	font-size: 12px;
+	padding: 1px 5px;
+	line-height: 18px;
+	font-weight: lighter;
+}
+.addPetInfo .control-label {
+	line-height: 35px;
+	padding-top: 0px;
+	text-align: right;
+}
+.addPetInfo .row{
+	margin-top: 10px;
+}
+.special{
+	font-weight: bold;
+}
+.list-all{
+	/*height: 800px;*/
+	margin-top: 20px;
+}
+.info-top{
+	/*position: sticky;
+	position: -webkit-sticky;
+	top: 0px;
+	z-index: 999;*/
+	background: white;
+}
+.pet-information-price{
+	color: red;
+}
+.moreDetails:hover{
+	text-decoration: none;
+}
+.petName:hover{
+	cursor: pointer;
+	color: red;
+}
+#searchBtn{
+	margin-top: -5px;
+	margin-left: 35px;
+}
+#searchReset{
+	margin-top: -5px;
+	margin-left: 5px;
+}
+#noData{
+	display: none;
+	background: white;
+	height: 200px;
+	margin: 20px 0;
+	line-height: 200px;
+	text-align: center;
+	/* border: 1px solid #2277ee; */
+	font-size: 26px;
+}
+.pet-info-page{
+	padding-right: 30px;
+	height: 120px;
+}
+
+#allData{
+	padding-left: 15px;
+	padding-right: 15px;
+}
+.edit-dialog-all{
+	padding-top: 8px;
+}
+.left-label-title{
+	text-align: right;
+}
